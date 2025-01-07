@@ -35,15 +35,62 @@ def create_table_dl():
 
 
     create_table_query = """
-    CREATE OR REPLACE TABLE postgres_db.raw.usuarios (
+     CREATE OR REPLACE TABLE postgres_db.raw.tb_localidade (
+        id_localidade INTEGER,
+        nome_cidade VARCHAR,
+        nome_estado VARCHAR,
+        nome_regiao VARCHAR,
+        PRIMARY KEY (id_localidade)
+    );
+
+     CREATE OR REPLACE TABLE postgres_db.raw.tb_marca (
+        id_marca INTEGER,
+        nome_marca VARCHAR,
+        PRIMARY KEY (id_marca)
+    );
+
+    CREATE OR REPLACE TABLE postgres_db.raw.tb_usuarios (
         id_usuario INTEGER,
-        nome VARCHAR,
+        nome_usuario VARCHAR,
         email VARCHAR,
         navegador VARCHAR,
         data_nascimento DATE,
         data_cadastro DATE,
-        cidade_id INTEGER,
+        fk_usuarios_localidade INTEGER,
         PRIMARY KEY (id_usuario)
+    );
+    CREATE OR REPLACE TABLE postgres_db.raw.tb_produtos (
+        id_produto INTEGER,
+        nome_produto VARCHAR,
+        fk_produtos_marca INTEGER,
+        preco FLOAT,
+        categoria VARCHAR,
+        PRIMARY KEY (id_produto)
+    );
+    CREATE OR REPLACE TABLE postgres_db.raw.tb_lojas (
+        id_loja INTEGER,
+        nome_loja VARCHAR,
+        fk_lojas_localidade INTEGER,
+        data_abertura DATE,
+        PRIMARY KEY (id_loja)
+    );
+   
+       CREATE OR REPLACE TABLE postgres_db.raw.tb_vendas (
+        id_venda INTEGER,
+        fk_venda_usuario INTEGER,
+        fk_venda_loja INTEGER,
+        data_venda DATE,
+        valor_total FLOAT,
+        PRIMARY KEY (id_venda)
+    );
+    CREATE OR REPLACE TABLE postgres_db.raw.tb_item_venda (
+        id_item_venda INTEGER,
+        fk_item_venda_vendas INTEGER,
+        fk_item_venda_produto INTEGER,
+        quantidade INTEGER,
+        preco_unitario FLOAT,
+        preco_total FLOAT,
+        PRIMARY KEY (id_item_venda)
     );
     """
     conn_pg.execute(create_table_query)

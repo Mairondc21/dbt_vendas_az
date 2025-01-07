@@ -14,7 +14,7 @@ sources:
       description: "Tabela que informa os dados das marcas"
     - name: tb_localidade
       description: "Tabela que informa os dados de todas as localidades do Brasil"
-    - name: tb_loja
+    - name: tb_lojas
       description: "Tabela que informa os dados das lojas"
     - name: tb_vendas
       description: "Tabela que informa os dados das vendas em lojas para funcionarios"

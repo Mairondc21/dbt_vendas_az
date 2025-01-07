@@ -5,7 +5,7 @@ WITH source AS (
         fk_lojas_localidade,
         data_abertura AS lj_dt_abertura
     FROM
-        {{ source('raw','tb_loja') }}
+        {{ source('raw','tb_lojas') }}
 )
 SELECT 
     *

@@ -1,0 +1,134 @@
+version: 2
+
+models:
+  - name: stg_vendas__usuarios
+    description: "Tabela que informa os dados do usuario"
+    
+    columns:
+      - name: pk_us_id
+        description: "Chave primaria"
+        tests:
+          - unique
+          - not_null
+
+      - name: us_nome
+        description: "Nome do usuario"
+        tests:
+        - not_null
+      
+      - name: us_email
+        description: "Email do usuario"
+        tests:
+        - not_null
+      
+      - name: us_navegador
+        description: "Navegador do usuario"
+        tests:
+        - not_null
+      
+      - name: us_dt_nascimento
+        description: "Data de nascimento do usuario"
+        tests:
+          - not_null
+      
+      - name: us_dt_cadastro
+        description: "Data de cadastro do usuario"
+        tests:
+          - not_null
+      
+      - name: fk_usuarios_localidade
+        description: "Chave estrangeira da tabela localidade"
+        tests:
+          - relationships:
+              to: ref('stg_vendas__localidades')
+              field: pk_lo_id
+  - name: stg_vendas__produtos
+    description: "Tabela que informa os dados dos produtos"
+    columns:
+      - name: pk_pr_id
+        description: "Chave primaria da tabela"
+        tests:
+          - not_null
+          - unique
+
+      - name: fk_produtos_marca
+        description: "Chave estrangeira da tabela marca"
+        tests:
+        - relationships:
+            to: ref('stg_vendas_marcas')
+            field: pk_mr_id  
+  - name: stg_vendas__marcas
+    description: "Tabela que informa os dados das marcas"
+    columns:
+      - name: pk_mr_id
+        description: "Chave primaria da tabela"
+        tests:
+          - unique
+          - not_null
+  - name: stg_vendas__localidades
+    description: "Tabela que informa os dados de todas as localidades do Brasil"
+    columns:
+      - name: pk_lo_id
+        description: "Chave primaria da tabela"
+        tests:
+          - unique
+          - not_null      
+  - name: stg_vendas__lojas
+    description: "Tabela que informa os dados das lojas"
+    columns:
+      - name: pk_lj_id
+        description: "Chave primaria da tabela"
+        tests:
+          - unique
+          - not_null
+      
+      - name: fk_lojas_localidade
+        description: "Chave estrangeira da tabela localidades"
+        tests:
+          - relationships:
+              to: ref('stg_vendas__localidades')
+              field: pk_lo_id
+  - name: stg_vendas__itens_venda
+    description: "Tabela que informa os dados das vendas de qual produto e quantidade"
+    columns:
+      - name: pk_iv_id
+        description: "Chave primaria"
+        tests:
+          - not_null
+          - unique
+      
+      - name: fk_item_venda_vendas
+        description: "Chave estrangeira da tabela de vendas"
+        tests:
+          - relationships:
+              to: ref('stg_vendas__vendas')
+              field: pk_vd_id
+      
+      - name: fk_item_venda_produto
+        description: "Chave estrangeira da tabela de produto"
+        tests:
+          - relationships:
+              to: ref('stg_vendas__produtos')
+              field: pk_pr_id
+  - name: stg_vendas__vendas
+    description: "Tabela que informa os dados das lojas"
+    columns:
+      - name: pk_vd_id
+        description: "Chave primaria da tabela"
+        tests:
+          - unique
+          - not_null
+      
+      - name: fk_venda_usuario
+        description: "Chave estrangeira da tabela de usuarios"
+        tests:
+          - relationships:
+              to: ref('stg_vendas__usuarios')
+              field: pk_us_id
+
+      - name: fk_venda_loja
+        description: "Chave estrangeira da tabela de lojas"
+        tests:
+          - relationships:
+              to: ref('stg_vendas__lojas')
+              field: pk_lj_id

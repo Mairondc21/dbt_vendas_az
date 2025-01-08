@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT
-        pk_lj_id AS sk_dim,
+        pk_lj_id AS sk_dim_lojas,
         lj_nome,
         lo_cidade AS lj_lo_cidade,
         lo_estado AS lj_lo_estado,

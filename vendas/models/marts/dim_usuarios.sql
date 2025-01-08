@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT
-        pk_us_id AS sk_dim,
+        pk_us_id AS sk_dim_usuarios,
         us_nome,
         us_navegador,
         us_idade,

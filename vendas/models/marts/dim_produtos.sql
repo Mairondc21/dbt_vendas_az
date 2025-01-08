@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT
-        pk_pr_id AS sk_dim,
+        pk_pr_id AS sk_dim_produtos,
         pr_nome,
         mr_nome AS pr_mr_nome,
         pr_categoria

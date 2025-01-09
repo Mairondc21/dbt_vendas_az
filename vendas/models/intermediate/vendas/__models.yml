@@ -47,7 +47,7 @@ unit_tests:
             us_email: "teste@email.com"
             us_navegador: "edge"
             us_dt_nascimento: '2002-11-21'
-            us_dt_cadastro: '2021-01-01'
+            us_dt_cadastro: '2020-01-01'
             fk_usuarios_localidade: 999
       - input: ref('stg_vendas__localidades')
         rows:
@@ -61,7 +61,7 @@ unit_tests:
           us_nome: "teste"
           us_navegador: "edge"
           us_idade: 23
-          us_dt_cadastro: '2021-01-01'
+          us_dt_cadastro: '2020-01-01'
           pk_lo_id: 999
           lo_cidade: "teste"
           lo_estado: "teste"
@@ -71,43 +71,40 @@ unit_tests:
     description: "verifica a criacao das metricas iv_preco_total,vd_valor_total"
     model: int_vendas_consolidado
     given:
-      - input: ref('stg_vendas__vendas')
-        rows:
-          - {vd_dt_venda: '2024-02-15'}
-          - {vd_dt_venda: '2024-02-15'}
-      - input: ref('stg_vendas__itens_venda')
-        rows:
-          - {iv_quantidade: 2}
-          - {iv_quantidade: 1}
-      - input: ref('int_produtos_consolidado')
-        rows:
-          - {pr_preco: 100.00}
-          - {pr_preco: 100.00}
-      - input: ref('int_usuarios_consolidado')
-        rows:
-          - {pk_us_id: 1}
-          - {pk_us_id: 1}
-      - input: ref('int_lojas_consolidado')
-        rows:
-          - {pk_lj_id: 1}
-          - {pk_lj_id: 1}
+    - input: ref('stg_vendas__vendas')
+      rows:
+        - {pk_vd_id: 1, fk_venda_usuario: 1, fk_venda_loja: 1, vd_dt_venda: '2024-02-15'}
+    - input: ref('stg_vendas__itens_venda')
+      rows:
+        - {pk_iv_id: 1, fk_item_venda_vendas: 1, fk_item_venda_produto: 1, iv_quantidade: 2}
+        - {pk_iv_id: 2, fk_item_venda_vendas: 1, fk_item_venda_produto: 1, iv_quantidade: 1}
+    - input: ref('int_produtos_consolidado')
+      rows:
+        - {pk_pr_id: 1, pk_mr_id: 1, pr_preco: 100}
+    - input: ref('int_usuarios_consolidado')
+      rows:
+        - {pk_us_id: 1}
+    - input: ref('int_lojas_consolidado')
+      rows:
+        - {pk_lj_id: 1}
     expect:
       rows:
         - {pk_us_id: 1,
           pk_lj_id: 1,
           iv_quantidade: 2,
-          pr_preco: '100.00',
-          iv_preco_total: '200.00',
+          pr_preco: 100,
+          iv_preco_total: 200,
           vd_dia_venda: 15,
-          vd_valor_total: '300.00'
+          vd_valor_total: 300
         }
         - {pk_us_id: 1,
           pk_lj_id: 1,
           iv_quantidade: 1,
-          pr_preco: '100.00',
-          iv_preco_total: '100.00',
+          pr_preco: 100,
+          iv_preco_total: 100,
           vd_dia_venda: 15,
-          vd_valor_total: '300.00'
+          vd_valor_total: 300
         }
+
 
 

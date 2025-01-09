@@ -5,7 +5,7 @@ WITH source AS (
         pr.sk_dim_produtos,
         lj.sk_dim_lojas,
         vd.iv_quantidade AS quantidade,
-        vd.iv_preco_unitario AS preco_uni,
+        vd.pr_preco AS preco_uni,
         vd.iv_preco_total AS preco_total,
         vd.vd_dia_venda AS dia_venda,
         vd.vd_mes_venda AS mes_venda,

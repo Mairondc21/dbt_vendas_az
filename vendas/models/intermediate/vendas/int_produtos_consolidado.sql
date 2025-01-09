@@ -4,7 +4,7 @@ WITH source AS (
         pr_nome,
         pk_mr_id,
         mr_nome,
-        pr_preco,
+        CAST(pr_preco AS NUMERIC) AS pr_preco ,
         pr_categoria
     FROM
         {{ ref('stg_vendas__produtos') }} pr

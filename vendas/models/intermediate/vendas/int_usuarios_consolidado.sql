@@ -3,7 +3,7 @@ WITH source AS (
        us.pk_us_id,
        us.us_nome,
        us.us_navegador,
-       2025 - DATE_PART('year',us.us_dt_nascimento)  AS us_idade,
+       CAST(2025 - DATE_PART('year',us.us_dt_nascimento) AS INTEGER) AS us_idade,
        us.us_dt_cadastro,
        lo.pk_lo_id,
        lo.lo_cidade,

@@ -20,7 +20,7 @@ itens_venda AS (
         pr.pk_pr_id,
         pr.pr_nome,
         iv.iv_quantidade,
-        pr.pr_preco,
+        ROUND(pr.pr_preco,2) AS pr_preco,
         ROUND(CAST(pr.pr_preco * iv.iv_quantidade AS NUMERIC), 2) as iv_preco_total
     FROM
         {{ ref('stg_vendas__itens_venda') }} iv
@@ -37,17 +37,36 @@ vendas_final AS (
         sr.pk_lj_id,
         sr.lj_nome,
         iv.iv_quantidade,
-        CAST(iv.pr_preco AS DECIMAL) AS pr_preco,
-        CAST(iv.iv_preco_total AS DECIMAL) AS iv_preco_total ,
+        CAST(iv.pr_preco AS FLOAT) AS pr_preco,
+        CAST(iv.iv_preco_total AS FLOAT) AS iv_preco_total,
         sr.vd_dia_venda,
         sr.vd_mes_venda,
         sr.vd_ano_venda,
-        CAST(ROUND(SUM(iv_preco_total) OVER( PARTITION BY sr.pk_us_id,sr.vd_dia_venda),2) AS DECIMAL) AS vd_valor_total
+        ROUND(SUM(iv_preco_total) OVER( PARTITION BY sr.pk_us_id,sr.vd_dia_venda),2) AS vd_valor_total
     from itens_venda iv
     INNER JOIN source sr ON iv.fk_vd_id = sr.pk_vd_id
     ORDER BY iv.pk_iv_id ASC
-) 
+),
+transform AS(
+    SELECT
+        pk_iv_id,
+        pk_us_id,
+        us_nome,
+        pk_pr_id,
+        pr_nome,
+        pk_lj_id,
+        lj_nome,
+        iv_quantidade,
+        pr_preco,
+        iv_preco_total,
+        vd_dia_venda,
+        vd_mes_venda,
+        vd_ano_venda,
+        CAST(vd_valor_total AS FLOAT) AS vd_valor_total
+    FROM
+        vendas_final
+)   
 SELECT
     *
 FROM
-    vendas_final      
+    transform

@@ -5,9 +5,9 @@ WITH source AS (
         us.us_nome,
         lj.pk_lj_id,
         lj.lj_nome,
-        DATE_PART('YEAR',vd.vd_dt_venda) AS vd_ano_venda,
-        DATE_PART('MONTH',vd.vd_dt_venda) AS vd_mes_venda,
-        DATE_PART('DAY',vd.vd_dt_venda) AS vd_dia_venda
+        CAST(DATE_PART('YEAR',vd.vd_dt_venda) AS INTEGER) AS vd_ano_venda,
+        CAST(DATE_PART('MONTH',vd.vd_dt_venda) AS INTEGER) AS vd_mes_venda,
+        CAST(DATE_PART('DAY',vd.vd_dt_venda) AS INTEGER) AS vd_dia_venda
     FROM
         {{ ref('stg_vendas__vendas') }} vd
     INNER JOIN {{ ref('int_usuarios_consolidado') }} us ON us.pk_us_id = vd.fk_venda_usuario
@@ -37,12 +37,12 @@ vendas_final AS (
         sr.pk_lj_id,
         sr.lj_nome,
         iv.iv_quantidade,
-        iv.pr_preco,
-        iv.iv_preco_total,
+        CAST(iv.pr_preco AS DECIMAL) AS pr_preco,
+        CAST(iv.iv_preco_total AS DECIMAL) AS iv_preco_total ,
         sr.vd_dia_venda,
         sr.vd_mes_venda,
         sr.vd_ano_venda,
-        ROUND(SUM(iv_preco_total) OVER( PARTITION BY sr.pk_us_id,sr.vd_dia_venda),2) AS vd_valor_total
+        CAST(ROUND(SUM(iv_preco_total) OVER( PARTITION BY sr.pk_us_id,sr.vd_dia_venda),2) AS DECIMAL) AS vd_valor_total
     from itens_venda iv
     INNER JOIN source sr ON iv.fk_vd_id = sr.pk_vd_id
     ORDER BY iv.pk_iv_id ASC

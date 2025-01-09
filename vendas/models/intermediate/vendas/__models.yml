@@ -1,0 +1,113 @@
+version: 2
+
+models:
+  - name: int_lojas_consolidado
+    description: "Juncao entre stg_vendas__lojas e stg_vendas__localidades"
+    columns:
+      - name: pk_lj_id
+        description: "Chave primaria da tabela"
+        tests:
+          - unique
+          - not_null
+  - name: int_usuarios_consolidado
+    description: "Juncao entre stg_vendas__usuarios e stg_vendas__localidades"
+    columns:
+      - name: pk_us_id
+        description: "Chave primaria da tabela"
+        tests:
+          - unique
+          - not_null
+  - name: int_produtos_consolidado
+    description: "Juncao entre stg_vendas__produtos e stg_vendas__marcas"
+    columns:
+      - name: pk_pr_id
+        description: "Chave primaria da tabela"
+        tests:
+          - not_null
+          - unique
+  - name: int_vendas_consolidado
+    description: "Juncao entre stg_vendas__vendas  e stg_vendas__itens_venda"
+    columns:
+      - name: pk_iv_id
+        description: "Chave primaria da tabela"
+        tests:
+          - not_null
+          - unique
+
+
+unit_tests:
+  - name: test_verificar_transform_idade
+    description: "Checando se a coluna idade está certa"
+    model: int_usuarios_consolidado
+    given:
+      - input: ref('stg_vendas__usuarios')
+        rows:
+          - pk_us_id: 222
+            us_nome: "teste"
+            us_email: "teste@email.com"
+            us_navegador: "edge"
+            us_dt_nascimento: '2002-11-21'
+            us_dt_cadastro: '2021-01-01'
+            fk_usuarios_localidade: 999
+      - input: ref('stg_vendas__localidades')
+        rows:
+          - pk_lo_id: 999
+            lo_cidade: "teste"
+            lo_estado: "teste"
+            lo_regiao: "teste"
+    expect:
+      rows:
+        - pk_us_id: 222
+          us_nome: "teste"
+          us_navegador: "edge"
+          us_idade: 23
+          us_dt_cadastro: '2021-01-01'
+          pk_lo_id: 999
+          lo_cidade: "teste"
+          lo_estado: "teste"
+          lo_regiao: "teste"
+
+  - name: test_verificar_metricas
+    description: "verifica a criacao das metricas iv_preco_total,vd_valor_total"
+    model: int_vendas_consolidado
+    given:
+      - input: ref('stg_vendas__vendas')
+        rows:
+          - {vd_dt_venda: '2024-02-15'}
+          - {vd_dt_venda: '2024-02-15'}
+      - input: ref('stg_vendas__itens_venda')
+        rows:
+          - {iv_quantidade: 2}
+          - {iv_quantidade: 1}
+      - input: ref('int_produtos_consolidado')
+        rows:
+          - {pr_preco: 100.00}
+          - {pr_preco: 100.00}
+      - input: ref('int_usuarios_consolidado')
+        rows:
+          - {pk_us_id: 1}
+          - {pk_us_id: 1}
+      - input: ref('int_lojas_consolidado')
+        rows:
+          - {pk_lj_id: 1}
+          - {pk_lj_id: 1}
+    expect:
+      rows:
+        - {pk_us_id: 1,
+          pk_lj_id: 1,
+          iv_quantidade: 2,
+          pr_preco: '100.00',
+          iv_preco_total: '200.00',
+          vd_dia_venda: 15,
+          vd_valor_total: '300.00'
+        }
+        - {pk_us_id: 1,
+          pk_lj_id: 1,
+          iv_quantidade: 1,
+          pr_preco: '100.00',
+          iv_preco_total: '100.00',
+          vd_dia_venda: 15,
+          vd_valor_total: '300.00'
+        }
+
+

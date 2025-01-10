@@ -1,10 +1,10 @@
 version: 2
 
 models:
-  - name: dim_usuarios
+  - name: snap_dim_usuarios
     description: "Tabela final de usuarios"
     columns:
-      - name: sk_dim_usuarios
+      - name: dbt_scd_id
         description: "Chave primaria da tabela"
         tests:
           - not_null
@@ -17,3 +17,11 @@ models:
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 18
               max_value: 100
+  - name: fato_vendas
+    description: "Tabela FATO com todos os registros"
+    columns:
+      - name: ft_id
+        description: "Chave primaria da tabela"
+        tests:
+          - not_null
+          - unique

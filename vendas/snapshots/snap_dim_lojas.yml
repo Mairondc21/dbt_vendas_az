@@ -1,0 +1,14 @@
+version: 2
+
+snapshots: 
+  - name: snap_dim_lojas
+    config:
+      database: postgres_user
+      schema: marts
+      unique_key: sk_dim_lojas
+      strategy: check
+      check_cols:
+      - lj_nome
+      - lj_lo_cidade
+      - lj_lo_estado
+      - lj_lo_regiao

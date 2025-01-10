@@ -1,0 +1,15 @@
+version: 2
+
+snapshots:
+  - name: snap_dim_usuarios
+    config:
+      database: postgres_user
+      schema: marts
+      unique_key: sk_dim_usuarios
+      strategy: check
+      check_cols:
+      - us_nome
+      - us_lo_cidade
+      - us_lo_estado
+      - us_lo_regiao
+

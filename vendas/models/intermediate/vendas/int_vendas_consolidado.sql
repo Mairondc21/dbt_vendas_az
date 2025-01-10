@@ -42,7 +42,7 @@ vendas_final AS (
         sr.vd_dia_venda,
         sr.vd_mes_venda,
         sr.vd_ano_venda,
-        ROUND(SUM(iv_preco_total) OVER( PARTITION BY sr.pk_us_id,sr.vd_dia_venda),2) AS vd_valor_total
+        ROUND(SUM(iv_preco_total) OVER( PARTITION BY sr.pk_us_id,sr.vd_mes_venda),2) AS vd_valor_total
     from itens_venda iv
     INNER JOIN source sr ON iv.fk_vd_id = sr.pk_vd_id
     ORDER BY iv.pk_iv_id ASC
